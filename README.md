@@ -1,3 +1,5 @@
 # OSEMN
-In this Osemn folder we have four files including data of both comedy and action types,PDF containing the data in it and finally t
-.rnw file in which all the process of fetching,scrubbing,exploring,finding the result and plotting the graph.
+Osemn.rnw----->It has all the codes in it.
+Osemn.pdf------> It is been generated from the osemn.rnw containing datas in it.
+top_comedy.csv----->contains the data about movies in .csv fromat(In the form of table)
+top_action.csv----->contains the data about movies in .csv fromat(In the form of table)
