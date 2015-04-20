@@ -1,0 +1,143 @@
+\documentclass{article}
+
+\begin{document}
+<<Introduction, echo=FALSE, warning=FALSE>>=
+
+@
+
+{\fontsize{24}{4}\selectfont Overview}
+
+A type of visual communication, using motion pictures and sound to tell stories or give information to the viewers, are termed as films or movies. Movies are a type of entertainment, which people watch to relax themselves or for fun. Depending on the type of movie, different resources are used in the production of the movie such as if it is an animation movie, it would using different effects, if it is a science fiction or sci-fi, it would use a lot of cinematic effects and sounds and people too, to help support the production of tthe movie. The type of the movie, casts and other factors contribute to the  cost of the production of the movie.
+
+Movie Genres
+
+Each and every movie has a type or style, which helps categorize the movies, termed as a genre. Some movies are a mix of multiple genres such as romantic and comedy, usually termed as romedy or action and comedy. There are many different types of genres of movies such as Action, Adventure, Comedy, Animated, Horror, Drama, Family, Romantic, Thriller, Fantasy.etc.
+
+Animated Movies
+
+Making a motion picture out of multiple still images is termed as an Animation. A person who makes animations is called an Animator. Animated movies use fictional characters such as talking animals, talking vehicles. These images are put together one after the another in a particular sequence and played at a speed fast enough to give the illusion of movement. Each image is termed as one frame of the movie. Normally, animation movies play at a speed of twenty four to sixty images per second. There are three which to create an animation:
+
+Draw each frame and run them at a particular speed.
+Use stop-motion.
+Make computer graphics.
+
+Some of the popular movies under this genre are Cars, How to train your dragon, Frozen, Tangled, Shrek, Kung fu panda.
+
+
+Romantic Movies
+
+Romantic movies make the romantic love story or the search for strong and pure love and romance the main focus. Romantic movies are romantic love stories recorded in visual media for broadcast in theaters and on television that focus on passion, emotion, and the affectionate romantic involvement of the main characters and the journey that their genuinely strong, true and pure romantic love takes them through dating, courtship or marriage. Romantic movies serve as great escapes and fantasies for viewers, especially if the two people finally overcome their difficulties, declare their love, and experience life "happily ever after", implied by a reunion and final kiss.
+Some of the popular movies under this genre are The Notebook, Before Sunrise, A Walk to Remember, When Harry Met Sally.
+
+<<Code, echo = TRUE, error=FALSE, warning = FALSE, results='hide'>>=
+
+# The table number to be called from the given link
+tablenumber <- 3;
+
+# Link to the Animation Data
+address <- rvest::html("http://www.rottentomatoes.com/top/bestofrt/top_100_animation_movies/?category=2")
+anim.movies <- rvest::html_table(rvest::html_nodes(address, "table")[[tablenumber]])
+
+# Writing the data into a dataframe
+anim.movies <- as.data.frame(anim.movies)
+str(anim.movies)
+# Writing the data into a csv file
+top_animation <- write.csv(anim.movies)
+
+write.csv(anim.movies, file = "top_animation.csv", append = FALSE, quote = TRUE, sep = " ",
+            eol = "\n", na = "NA", dec = ".", row.names = TRUE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "")
+
+# Data Scrub
+anim.movies<-na.omit(anim.movies$RatingTomatometer)
+anim.movies
+y <- gsub("[:print:]","",anim.movies)
+perc_vec<-c(y)
+
+# Removing the "%" from RatingTomatometer Column
+y <- as.numeric(gsub("%","", perc_vec)) 
+# str() Command
+str(y)
+# Taking the sum of all the ratings
+z <- sum(y)
+# Taking the mean of the ratings to be able to plot it on a graph
+z <- z/100
+# class() Command
+class(z)
+# summary() Command
+summary(z)
+
+
+# The table number to be called from the given link
+tablenumber <- 3;
+
+# Link to the Romantic Data
+address <- rvest::html("http://www.rottentomatoes.com/top/bestofrt/?category=18")
+rom.movies <- rvest::html_table(rvest::html_nodes(address, "table")[[tablenumber]])
+
+# Writing the data into a dataframe
+rom.movies <- as.data.frame(rom.movies)
+str(rom.movies)
+
+# Writing the data into a csv file
+top_romantic <- write.csv(rom.movies)
+
+write.csv(rom.movies, file = "top_romantic.csv", append = FALSE, quote = TRUE, sep = " ",
+          eol = "\n", na = "NA", dec = ".", row.names = TRUE,
+          col.names = TRUE, qmethod = c("escape", "double"),
+          fileEncoding = "")
+
+# Data Scrub
+rom.movies<-na.omit(rom.movies$RatingTomatometer)
+rom.movies
+a <- gsub("[:print:]","",rom.movies)
+perc_vec<-c(a)
+
+# Removing the "%" from RatingTomatometer Column
+a <- as.numeric(gsub("%","", perc_vec))
+# str() Command
+str(a)
+
+# Taking the sum of all the ratings
+b <- sum(a)
+# Taking the mean of the ratings to be able to plot it on a graph
+c <- b/100
+# class() Command
+class(c)
+# summary() Command
+summary(c)
+
+v1 <- (c("Animation", "Romantic"))
+v2 <- (c(z,c))
+
+# Plotting the Graph
+library(ggplot2)
+Movies <- data.frame(Genre = factor(v1, levels = v1), Ratings = v2)
+ggplot(data=Movies, aes(x=Genre, y=Ratings,fill=Genre)) + geom_bar(stat = "identity") +ggtitle("Movies Rating Comparison")
+
+# Plotting the Pie Chart
+library(plotrix)
+slices <- c(z,c)
+lbls <- c("Animation", "Romantic")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="") # ad % to labels
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+   main="Movies Rating Comparison")
+
+@
+{\fontsize{24}{4}\selectfont Result}
+
+BarPlot Graph
+
+The Bar graph shows comparison between the mean of ratings between the Animated Movies and the Romantic Movies. The x-axis displays the Genre of the Movie i.e Animation or Romantic while the y-axis displays the ratings. The Bar Graph shows that the mean of the Romantic Movies is higher than that of the Animation Movies. The mean of the Romantic Movies is 94.17 and the mean of the Animated Movies is 89.35
+
+
+Pie Chart
+
+The Pie Chart compares the percent difference between the ratings of the Animated Movies and the Romantic Movies. The chart shows that the Animation Movie rating is 49 percent while that of the Romantic Movie is 51 percent. 
+
+The above results clearly displays that the ratings of the Romantic Movies is higher than the ratings of the Animation Movies.
+
+\end{document}
